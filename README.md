@@ -97,7 +97,7 @@ npm start
 Swagger UI available at:
 
 ```
-http://localhost:3000/api-docs
+http://localhost:3000/docs
 ```
 
 ---
