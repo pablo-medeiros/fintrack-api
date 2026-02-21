@@ -1,14 +1,13 @@
-import RegisterService from '../../../src/modules/users/services/register.service';
+import LoginService from '../../../src/modules/users/services/login.service';
 import { AppError } from '../../../src/shared/middlewares/error.middleware';
-import bcrypt, { compare } from 'bcrypt';
 
 jest.mock('bcrypt');
 
-describe('RegisterService', () => {
+describe('LoginService', () => {
   let usersRepositoryMock: any;
   let tokenServiceMock: any;
   let passwordServiceMock: any;
-  let registerService: RegisterService;
+  let loginService: LoginService;
 
   beforeEach(() => {
     usersRepositoryMock = {
@@ -26,23 +25,22 @@ describe('RegisterService', () => {
       compare: jest.fn(),
     }
 
-    registerService = new RegisterService(
+    loginService = new LoginService(
       usersRepositoryMock,
       tokenServiceMock,
       passwordServiceMock
     );
   });
 
-  it('should create a new user successfully', async () => {
-    usersRepositoryMock.findByEmail.mockResolvedValue(null);
-
-    passwordServiceMock.encrypt.mockResolvedValue('hashed_password');
-
-    usersRepositoryMock.create.mockResolvedValue({
+  it('should login a user successfully', async () => {
+    usersRepositoryMock.findByEmail.mockResolvedValue({
       id: '123',
       name: 'Pablo',
       email: 'pablo@email.com',
+      password: 'hashed_password',
     });
+
+    passwordServiceMock.compare.mockResolvedValue(true);
 
     tokenServiceMock.generateToken.mockReturnValue({
       accessToken: 'access-token',
@@ -51,15 +49,13 @@ describe('RegisterService', () => {
 
     usersRepositoryMock.updateRefreshToken.mockResolvedValue(undefined);
 
-    const result = await registerService.execute(
-      'Pablo',
+    const result = await loginService.execute(
       'pablo@email.com',
       '123456'
     );
 
     expect(usersRepositoryMock.findByEmail).toHaveBeenCalledWith('pablo@email.com');
-    expect(passwordServiceMock.encrypt).toHaveBeenCalledWith('123456');
-    expect(usersRepositoryMock.create).toHaveBeenCalled();
+    expect(passwordServiceMock.compare).toHaveBeenCalledWith('123456', 'hashed_password');
     expect(tokenServiceMock.generateToken).toHaveBeenCalledWith('123');
     expect(usersRepositoryMock.updateRefreshToken).toHaveBeenCalledWith('123', 'refresh-token');
 
@@ -74,7 +70,7 @@ describe('RegisterService', () => {
     });
 
     await expect(
-      registerService.execute('Pablo', 'pablo@email.com', '123456')
+      loginService.execute('pablo@email.com', '123456')
     ).rejects.toBeInstanceOf(AppError);
   });
 });

@@ -52,3 +52,83 @@ This API follows REST principles and uses Bearer Token authentication.
 git clone https://github.com/pablo-medeiros/fintrack-api.git
 cd fintrack-api
 npm install
+```
+
+---
+
+## 🔧 Environment Variables
+
+Create a .env file:
+
+```env
+DATABASE_URL=postgresql://user:password@localhost:5432/fintrack_db
+JWT_SECRET=your_secret_key
+JWT_REFRESH_SECRET=your_refresh_secret
+PORT=3000
+```
+
+---
+
+## 🗄 Database Setup
+
+```bash
+npx prisma generate
+npx prisma migrate dev
+```
+
+---
+
+## ▶️ Running the Project
+
+Development:
+```bash
+npm run dev
+```
+Production:
+```bash
+npm run build
+npm start
+```
+
+---
+
+## 📘 API Documentation
+
+Swagger UI available at:
+
+```
+http://localhost:3000/api-docs
+```
+
+---
+
+## 📦 API Response Pattern
+
+Success
+```json
+{
+  "status": "success",
+  "data": {}
+}
+```
+Error
+```json
+{
+  "status": "error",
+  "message": "Error message"
+}
+```
+
+---
+
+## 🧪 Running Tests
+
+```bash
+npm run test
+```
+
+----
+
+## 📄 License
+
+MIT
