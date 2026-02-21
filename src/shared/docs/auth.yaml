@@ -1,0 +1,155 @@
+/api/auth/register:
+  post:
+    summary: Register a new user
+    tags: [Authentication]
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - name
+              - email
+              - password
+            properties:
+              name:
+                type: string
+                maxLength: 255
+                example: Pablo
+              email:
+                type: string
+                format: email
+                maxLength: 255
+                example: pablo@email.com
+              password:
+                type: string
+                format: password
+                minLength: 6
+                example: 123456
+    responses:
+      201:
+        description: User created successfully
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/SuccessResponse'
+                - type: object
+                  properties:
+                   status:
+                    type: string
+                    example: created
+                   data:
+                    allOf:
+                      - type: object
+                        properties:
+                          user:
+                            $ref: '#/components/schemas/User'
+                      - $ref: '#/components/schemas/AuthTokens'
+      409:
+        description: Email already in use
+        content:
+         application/json:
+           schema:
+            allOf:
+             - $ref: '#/components/schemas/ErrorResponse'
+             - type: object
+               properties:
+                message: { type: string, example: 'Email already in use' }
+/api/auth/login:
+  post: 
+    summary: Login a user
+    tags: [Authentication]
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - email
+              - password
+            properties:
+              email:
+                type: string
+                format: email
+                maxLength: 255
+                example: pablo@email.com
+              password:
+                type: string
+                format: password
+                minLength: 6
+                example: 123456
+    responses:
+      201:
+        description: User logged in successfully
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/SuccessResponse'
+                - type: object
+                  properties:
+                   status:
+                    type: string
+                    example: success
+                   data:
+                    allOf:
+                      - type: object
+                        properties:
+                          user:
+                            $ref: '#/components/schemas/User'
+                      - $ref: '#/components/schemas/AuthTokens'
+      401:
+        description: Email or password incorrect
+        content:
+         application/json:
+           schema:
+            allOf:
+             - $ref: '#/components/schemas/ErrorResponse'
+             - type: object
+               properties:
+                message: { type: string, example: 'Email or password incorrect' }
+/api/auth/refresh-token:
+  post: 
+    summary: Refresh access token using refresh token
+    tags: [Authentication]
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - refreshToken
+            properties:
+             refreshToken:
+              type: string
+              example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJmMmYzNTRmMi1hOTM5LTRjMWUtOGI5ZS00NjJhNGUwZTJmYzAiLCJpYXQiOjE2OTQ4ODQ4MDAsImV4cCI6MTY5NDg4ODQwMH0.7n8sKZy3lHqjLhXo9a3e8v9u7s8f9g6h5j4k3l2m1n0
+    responses:
+      201:
+        description: Access token refreshed successfully
+        content:
+          application/json:
+            schema: 
+             allOf:
+              - $ref: '#/components/schemas/SuccessResponse'
+              - type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  data:
+                    schema:
+                     $ref: '#/components/schemas/AuthTokens'
+      401:
+        description: Refresh token is invalid or expired
+        content:
+         application/json:
+           schema:
+            allOf:
+             - $ref: '#/components/schemas/ErrorResponse'
+             - type: object
+               properties:
+                 message: { type: string, example: 'Refresh token is invalid or expired' }
