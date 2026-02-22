@@ -82,7 +82,7 @@
                 minLength: 6
                 example: 123456
     responses:
-      201:
+      200:
         description: User logged in successfully
         content:
           application/json:
@@ -128,7 +128,7 @@
               type: string
               example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJmMmYzNTRmMi1hOTM5LTRjMWUtOGI5ZS00NjJhNGUwZTJmYzAiLCJpYXQiOjE2OTQ4ODQ4MDAsImV4cCI6MTY5NDg4ODQwMH0.7n8sKZy3lHqjLhXo9a3e8v9u7s8f9g6h5j4k3l2m1n0
     responses:
-      201:
+      200:
         description: Access token refreshed successfully
         content:
           application/json:

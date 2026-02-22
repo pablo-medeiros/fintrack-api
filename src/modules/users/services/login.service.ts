@@ -16,7 +16,7 @@ export default class LoginService {
       if (!isPasswordValid) {
         throw new AppError("Email or password incorrect", 401);
       }
-      const token = this.tokenService.generateToken(user.id);
+      const token = this.tokenService.generateToken(user.id, user.role);
       await this.userRepository.updateRefreshToken(user.id, token.refreshToken);
       return {
         user: {

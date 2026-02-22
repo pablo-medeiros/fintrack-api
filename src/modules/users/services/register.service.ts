@@ -13,7 +13,7 @@ export default class RegisterService {
     }
     const hashedPassword = await this.passwordService.encrypt(password);
     const user = await this.usersRepository.create(name, email, hashedPassword);
-    const {accessToken, refreshToken} = this.tokenService.generateToken(user.id);
+    const {accessToken, refreshToken} = this.tokenService.generateToken(user.id, user.role);
     await this.usersRepository.updateRefreshToken(user.id, refreshToken);
     return {user: {id: user.id, name: user.name, email: user.email}, accessToken, refreshToken};
   }
