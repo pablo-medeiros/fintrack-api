@@ -79,6 +79,17 @@ If the token is invalid or missing, the API will return:
             refreshToken: { type: 'string' }
           }
         },
+        Transaction: {
+          type: 'object',
+          properties: {
+            id: { type: 'string', example: 'f2f354f2-a939-4c1e-8b9e-462a4e0e2fc0' },
+            title: { type: 'string', example: 'Salary' },
+            type: { type: 'string', enum: ['income', 'expense'], example: 'income' },
+            category: { type: 'string', example: 'Job' },
+            date: { type: 'string', format: 'date', example: '2024-06-01' },
+            amount: { type: 'number', example: 1000 }
+          }
+        },
         SuccessResponse: {
           type: 'object',
           required: ['status'],

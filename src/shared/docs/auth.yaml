@@ -47,6 +47,16 @@
                           user:
                             $ref: '#/components/schemas/User'
                       - $ref: '#/components/schemas/AuthTokens'
+      400:
+        description: Bad request
+        content:
+         application/json:
+           schema:
+            allOf:
+             - $ref: '#/components/schemas/ErrorResponse'
+             - type: object
+               properties:
+                message: { type: string, example: 'Invalid input data' }
       409:
         description: Email already in use
         content:
@@ -101,6 +111,16 @@
                           user:
                             $ref: '#/components/schemas/User'
                       - $ref: '#/components/schemas/AuthTokens'
+      400:
+        description: Bad request
+        content:
+         application/json:
+           schema:
+            allOf:
+             - $ref: '#/components/schemas/ErrorResponse'
+             - type: object
+               properties:
+                message: { type: string, example: 'Invalid input data' }
       401:
         description: Email or password incorrect
         content:
@@ -143,6 +163,16 @@
                   data:
                     schema:
                      $ref: '#/components/schemas/AuthTokens'
+      400:
+        description: Bad request
+        content:
+         application/json:
+           schema:
+            allOf:
+             - $ref: '#/components/schemas/ErrorResponse'
+             - type: object
+               properties:
+                message: { type: string, example: 'Invalid input data' }
       401:
         description: Refresh token is invalid or expired
         content:
