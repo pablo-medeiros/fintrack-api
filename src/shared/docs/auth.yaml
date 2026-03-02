@@ -101,9 +101,6 @@
                 - $ref: '#/components/schemas/SuccessResponse'
                 - type: object
                   properties:
-                   status:
-                    type: string
-                    example: success
                    data:
                     allOf:
                       - type: object
@@ -157,9 +154,6 @@
               - $ref: '#/components/schemas/SuccessResponse'
               - type: object
                 properties:
-                  status:
-                    type: string
-                    example: success
                   data:
                     schema:
                      $ref: '#/components/schemas/AuthTokens'

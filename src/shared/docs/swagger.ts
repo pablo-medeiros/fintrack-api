@@ -1,5 +1,5 @@
 import swaggerJsdoc from 'swagger-jsdoc';
-import { Options } from 'swagger-jsdoc';
+import { Options, Schema } from 'swagger-jsdoc';
 
 const options: Options = {
   definition: {
@@ -60,7 +60,7 @@ If the token is invalid or missing, the API will return:
     servers: [
       {
         url: 'http://localhost:3000',
-      },
+      }, 
     ],
     components: { 
       schemas: {
@@ -118,6 +118,73 @@ If the token is invalid or missing, the API will return:
               format: 'uuid'
             },
           }
+        },
+        PaginatedResponse: {
+          type: 'object',
+          allOf: [
+            {$ref: '#/components/schemas/SuccessResponse'},
+            {
+              type: 'object',
+              properties: {
+                meta: {
+                  type: 'object',
+                  properties: {
+                    total: {
+                      type: 'integer'
+                    },
+                    page: {
+                      type: 'integer'
+                    },
+                    limit: {
+                      type: 'integer'
+                    },
+                    totalPages: {
+                      type: 'integer'
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        },
+        PaginatedTransactionsResponse: {
+          type: 'object',
+          allOf: [
+            {
+              $ref: "#/components/schemas/PaginatedResponse"
+            },
+            { 
+              type: 'object',
+              properties: {
+                data: {
+                  type: 'array',
+                  items: {
+                    $ref: "#/components/schemas/Transaction"
+                  }
+                }
+              }
+            }
+            
+          ]
+        },
+        PaginatedUsersResponse: {
+          type: 'object',
+          allOf: [
+            {
+              $ref: "#/components/schemas/PaginatedResponse"
+            },
+            { 
+              type: 'object',
+              properties: {
+                data: {
+                  type: 'array',
+                  items: {
+                    $ref: "#/components/schemas/User"
+                  }
+                } 
+              }
+            }
+          ]
         }
       },
       securitySchemes: {

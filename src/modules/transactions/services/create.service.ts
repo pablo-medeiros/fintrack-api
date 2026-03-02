@@ -1,8 +1,7 @@
-import { transferableAbortController } from "node:util";
 import CreateTransactionDTO from "../dtos/create.dto";
 import TransactionsRepository from "../repositories/transactions.repository";
 
-export default class CreateService {
+export default class CreateTransactionService {
 
   constructor(readonly transactionsRepository: TransactionsRepository) {}
 

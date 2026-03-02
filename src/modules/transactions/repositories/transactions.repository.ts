@@ -4,33 +4,35 @@ export default class TransactionsRepository {
 
   constructor(readonly prisma: PrismaClient) {}
 
-  async listFromType(type: $Enums.TransactionType, userId?: string) {
-    return this.prisma.transaction.findMany({
-      where: {
-        type,
-        userId: userId ? userId : undefined,
-      },
-    });
-  }
-
-  async listFromDateRange(startDate: Date, endDate: Date, userId?: string) {
-    return this.prisma.transaction.findMany({
-      where: {
-        createdAt: {
-          gte: startDate,
-          lte: endDate,
-        },
-        userId: userId ? userId : undefined,
-      },
-    });
-  }
-
-  async listFromUser(userId: string) {
+  async findManyByUser(userId: string, skip = 0, take = 10) {
     return this.prisma.transaction.findMany({
       where: {
         userId,
       },
+      skip,
+      take,
+      orderBy: {updatedAt: "desc"},
     });
+  }
+
+  async countByUser(userId: string) {
+    return this.prisma.transaction.count({
+      where: {
+        userId,
+      },
+    });
+  }
+
+  async findMany(skip = 0, take = 10) {
+    return this.prisma.transaction.findMany({
+      skip,
+      take,
+      orderBy: {updatedAt: "desc"},
+    });
+  }
+
+  async count() {
+    return this.prisma.transaction.count();
   }
 
   async findById(id: string) {
@@ -58,7 +60,7 @@ export default class TransactionsRepository {
     });
   }
 
-  async update(id: string, data: Prisma.TransactionGetPayload<{ select: { title: true, type: true, category: true, date: true, amount: true } }>) {
+  async update(id: string, data: Prisma.TransactionUpdateInput) {
     return this.prisma.transaction.update({
       where: {
         id,

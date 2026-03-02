@@ -8,8 +8,5 @@ export default async function meController(req: AuthenticatedRequest, res: Respo
   const usersRepository = new UsersRepository(prisma);
   const meService = new MeService(usersRepository);
   const user = await meService.execute(req.user!.id);
-  res.json({
-    status: 'success',
-    data: user
-  });
+  res.ok(user);
 }

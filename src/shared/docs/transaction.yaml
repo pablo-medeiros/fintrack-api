@@ -1,0 +1,214 @@
+/api/transactions:
+  post:
+    summary: Create a new transaction
+    tags: [Transactions]
+    security:
+      - bearerAuth: []
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - title
+              - type
+              - date
+              - amount
+            properties:
+              title:
+                type: string
+                maxLength: 255
+                example: Salary
+              type:
+                type: string
+                enum: [INCOME, EXPENSE]
+                example: INCOME
+              category:
+                type: string
+                maxLength: 255
+                example: Job
+                default: Uncategorized
+              date:
+                type: string
+                format: date
+                example: 2026-02-24
+              amount:
+                type: number
+                example: 1000
+    responses:
+      201:
+        description: Transaction created successfully
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/SuccessResponse'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/Transaction'
+      400:
+        description: Bad request
+        content:
+         application/json:
+           schema:
+            allOf:
+             - $ref: '#/components/schemas/ErrorResponse'
+             - type: object
+               properties:
+                message: { type: string, example: 'Invalid input data' }
+      409:
+        description: Email already in use
+        content:
+         application/json:
+           schema:
+            allOf:
+             - $ref: '#/components/schemas/ErrorResponse'
+             - type: object
+               properties:
+                message: { type: string, example: 'Email already in use' }
+  patch:
+    summary: ""
+    tags: [Transactions]
+    security:
+      - bearerAuth: []
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              title:
+                type: string
+                maxLength: 255
+                example: Salary
+              type:
+                type: string
+                enum: [INCOME, EXPENSE]
+                example: INCOME
+              category:
+                type: string
+                maxLength: 255
+                example: Job
+              date:
+                type: string
+                format: date
+                example: 2026-02-24
+              amount:
+                type: number
+                example: 1000
+    responses:
+      201:
+        description: Transaction updated successfully
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/SuccessResponse'
+                - type: object
+                  properties:
+                    data:
+                      schema:
+                      $ref: '#/components/schemas/Transaction'
+      401:
+          $ref: '#/components/responses/UnauthorizedError'
+      403:
+        $ref: '#/components/responses/TokenExpiredError'
+  delete:
+    summary: ""
+    tags: [Transactions]
+    security:
+      - bearerAuth: []
+    responses:
+      204:
+        description: Transaction deleted successfully
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SuccessResponse'
+      401:
+          $ref: '#/components/responses/UnauthorizedError'
+      403:
+        $ref: '#/components/responses/TokenExpiredError'
+  get:
+    summary: "List authenticated user transactions"
+    tags: [Transactions]
+    security:
+      - bearerAuth: []
+    parameters:
+      - in: query
+        name: page
+        schema:
+          type: integer
+          example: 1
+      - in: query
+        name: limit
+        schema:
+          type: integer
+          example: 10
+    responses:
+      201:
+        description: "Transactions listed successfully"
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaginatedTransactionsResponse'
+      401:
+          $ref: '#/components/responses/UnauthorizedError'
+      403:
+        $ref: '#/components/responses/TokenExpiredError'
+/api/transactions/{id}:
+  get:
+    summary: ""
+    tags: [Transactions]
+    security:
+      - bearerAuth: []
+    responses:
+      201:
+        description: Get transaction successfully
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/SuccessResponse'
+                - type: object
+                  properties:
+                    data:
+                      schema:
+                      $ref: '#/components/schemas/Transaction'
+      401:
+          $ref: '#/components/responses/UnauthorizedError'
+      403:
+        $ref: '#/components/responses/TokenExpiredError'
+/api/transactions/user/{id}:
+  get:
+    summary: "List transactions of a specific user (ADMIN only)"
+    tags: 
+      - Transactions
+      - Admin
+    security:
+      - bearerAuth: []
+    parameters:
+      - in: query
+        name: page
+        schema:
+          type: integer
+          example: 1
+      - in: query
+        name: limit
+        schema:
+          type: integer
+          example: 10
+    responses:
+      201:
+        description: "Transactions listed successfully"
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaginatedTransactionsResponse'
+      401:
+          $ref: '#/components/responses/UnauthorizedError'
+      403:
+        $ref: '#/components/responses/TokenExpiredError'

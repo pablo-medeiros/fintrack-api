@@ -38,6 +38,7 @@ describe('LoginService', () => {
       name: 'Pablo',
       email: 'pablo@email.com',
       password: 'hashed_password',
+      role: 'USER',
     });
 
     passwordServiceMock.compare.mockResolvedValue(true);
@@ -56,7 +57,7 @@ describe('LoginService', () => {
 
     expect(usersRepositoryMock.findByEmail).toHaveBeenCalledWith('pablo@email.com');
     expect(passwordServiceMock.compare).toHaveBeenCalledWith('123456', 'hashed_password');
-    expect(tokenServiceMock.generateToken).toHaveBeenCalledWith('123');
+    expect(tokenServiceMock.generateToken).toHaveBeenCalledWith('123', 'USER');
     expect(usersRepositoryMock.updateRefreshToken).toHaveBeenCalledWith('123', 'refresh-token');
 
     expect(result).toHaveProperty('accessToken');
@@ -67,6 +68,7 @@ describe('LoginService', () => {
     usersRepositoryMock.findByEmail.mockResolvedValue({
       id: '1',
       email: 'pablo@email.com',
+      role: 'USER'
     });
 
     await expect(

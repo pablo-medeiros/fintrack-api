@@ -20,6 +20,18 @@ export default class UsersRepository {
     });
   }
 
+  async findMany(skip = 0, take = 10) {
+    return this.prisma.user.findMany({
+      skip,
+      take,
+      orderBy: {createdAt: "desc"},
+    });
+  }
+
+  async count() {
+    return this.prisma.user.count();
+  }
+
   async create(name: string, email: string, password: string) {
     return this.prisma.user.create({
       data: {

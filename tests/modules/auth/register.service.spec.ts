@@ -31,8 +31,8 @@ describe('RegisterService', () => {
       tokenServiceMock,
       passwordServiceMock
     );
-  });
-
+  }); 
+ 
   it('should create a new user successfully', async () => {
     usersRepositoryMock.findByEmail.mockResolvedValue(null);
 
@@ -42,12 +42,13 @@ describe('RegisterService', () => {
       id: '123',
       name: 'Pablo',
       email: 'pablo@email.com',
+      role: 'USER',
     });
 
     tokenServiceMock.generateToken.mockReturnValue({
       accessToken: 'access-token',
       refreshToken: 'refresh-token',
-    });
+    }); 
 
     usersRepositoryMock.updateRefreshToken.mockResolvedValue(undefined);
 
@@ -60,7 +61,7 @@ describe('RegisterService', () => {
     expect(usersRepositoryMock.findByEmail).toHaveBeenCalledWith('pablo@email.com');
     expect(passwordServiceMock.encrypt).toHaveBeenCalledWith('123456');
     expect(usersRepositoryMock.create).toHaveBeenCalled();
-    expect(tokenServiceMock.generateToken).toHaveBeenCalledWith('123');
+    expect(tokenServiceMock.generateToken).toHaveBeenCalledWith('123', 'USER');
     expect(usersRepositoryMock.updateRefreshToken).toHaveBeenCalledWith('123', 'refresh-token');
 
     expect(result).toHaveProperty('accessToken');
@@ -71,6 +72,7 @@ describe('RegisterService', () => {
     usersRepositoryMock.findByEmail.mockResolvedValue({
       id: '1',
       email: 'pablo@email.com',
+      role: 'USER'
     });
 
     await expect(

@@ -1,4 +1,3 @@
-import { AppError } from "../../../shared/middlewares/error.middleware";
 import Joi from "joi";
 
 export const emailSchema = Joi.string().email().max(255).required();
@@ -9,9 +8,3 @@ export const RegisterSchema = Joi.object({
   email: emailSchema,
   password: passwordSchema,
 });
-export default function registerValidator(body: any) {
-  const { error: registerError } = RegisterSchema.validate(body);
-  if (registerError) {
-    throw new AppError(registerError.details[0].message, 400);
-  }
-}
